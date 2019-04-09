@@ -13,9 +13,16 @@ namespace TextEditor
 {
     public partial class Form1 : Form
     {
+        
         public Form1()
-        {
+        {            
             InitializeComponent();
+          
+
+        }
+        public  void ResizeFrame()
+        {
+            this.Size = new System.Drawing.Size(570, 550);
         }
         public int getWidth()
         {
@@ -61,13 +68,11 @@ namespace TextEditor
             // now add each line number to LineNumberTextBox upto last line
             for (int i = First_Line; i <= Last_Line + 1; i++)
             {
-                LineNumberTextBox.Text += i + 1 + "\n";
+                LineNumberTextBox.Text += i + 1 +"\n";
             }
         }
+        
 
-
-
-       
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -138,7 +143,33 @@ namespace TextEditor
 
         private void richTextBox1_DoubleClick(object sender, EventArgs e)
         {
-            
+            string word = richTextBox1.SelectedText;
+            SelectAll(richTextBox1, word, Color.Yellow, Font.Bold);
+           
+        }
+
+        private void SelectAll(RichTextBox richTextBox1, string word, Color yellow, bool bold)
+        {
+            richTextBox1.Select(0, richTextBox1.TextLength);
+            richTextBox1.SelectionBackColor = richTextBox1.BackColor;
+            richTextBox1.SelectionFont = richTextBox1.Font;
+            if (word == "")
+            {
+                return;
+            }
+
+            int s_start = richTextBox1.SelectionStart, startIndex = 0, index;
+            while ((index = richTextBox1.Text.IndexOf(word, startIndex)) != -1)
+            {
+
+                richTextBox1.Select(index, word.Length);
+                richTextBox1.SelectionBackColor = yellow;
+                richTextBox1.SelectionFont = new Font(richTextBox1.Font, FontStyle.Bold);
+                startIndex = index + word.Length;
+            }
+            richTextBox1.SelectionStart = s_start;
+            richTextBox1.SelectionLength = 0;
+            richTextBox1.SelectionColor = yellow;
         }
 
         private void richTextBox1_Enter(object sender, EventArgs e)
@@ -169,6 +200,7 @@ namespace TextEditor
             }
             richTextBox1.ForeColor = Color.Black;
         }
+        
 
         private void richTextBox1_TextChanged(object sender, EventArgs e)
         {
@@ -187,7 +219,7 @@ namespace TextEditor
 
         private void findToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FindForm f = new FindForm(richTextBox1);
+            FindForm f = new FindForm(this);
         }
 
         private void replaceToolStripMenuItem_Click(object sender, EventArgs e)
@@ -197,12 +229,174 @@ namespace TextEditor
 
         private void richTextBox1_Click(object sender, EventArgs e)
         {
-         richTextBox1.ForeColor = Color.Black;
+         
+            //richTextBox1.Select(0, richTextBox1.TextLength);
+            richTextBox1.SelectionBackColor = richTextBox1.BackColor;
+            richTextBox1.SelectionFont = richTextBox1.Font;
         }
 
         private void richTextBox1_MouseClick(object sender, MouseEventArgs e)
         {
           
+        }
+
+        private void goToLineNumberToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GoToForm goToForm = new GoToForm(richTextBox1);
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void LineNumberTextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void LineNumberTextBox_VScroll(object sender, EventArgs e)
+        {
+            LineNumberTextBox.Text = "";
+            AddLineNumbers();
+            LineNumberTextBox.Invalidate();
+        }
+
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            richTextBox1.Clear();
+        }
+
+        private void openToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.ShowDialog(); //Shows the dialog   
+            if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK && openFileDialog.FileName.Contains(".txt")) //Checks if it's all ok and if the file name contains .txt  
+            {
+                string open = File.ReadAllText(openFileDialog.FileName); //Reads the text from file  
+                richTextBox1.Text = open; //Shows the reded text in the textbox  
+            }
+            else //If something goes wrong...  
+            {
+                MessageBox.Show("The file you've chosen is not a text file");
+            }
+        }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.ShowDialog(); //Opens the Show File Dialog  
+            if (saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK) //Check if it's all ok  
+            {
+                string name = saveFileDialog.FileName + ".txt"; //Just to make sure the extension is .txt  
+                File.WriteAllText(name, richTextBox1.Text); //Writes the text to the file and saves it               
+            }
+        }
+
+        private void undoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            richTextBox1.Undo();
+        }
+
+        private void redoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            richTextBox1.Redo();
+        }
+
+        private void cutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            richTextBox1.Cut();
+        }
+
+        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            richTextBox1.Copy();
+        }
+
+        private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            richTextBox1.Paste();
+        }
+
+        private void fontToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            FontDialog fontDialog = new FontDialog();
+            fontDialog.ShowDialog(); //Shows the font dialog   
+            if (fontDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                richTextBox1.Font = fontDialog.Font; //Sets the font to the one selected in the dialog  
+            }
+        }
+
+        private void colorToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            ColorDialog colorDialog = new ColorDialog();
+            colorDialog.ShowDialog(); //Shows the font dialog   
+            if (colorDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                richTextBox1.ForeColor = colorDialog.Color; //Sets the font to the one selected in the dialog  
+            }
+        }
+
+        private void findAndReplaceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FindForm f = new FindForm(this);
+        }
+
+        private void goToLineToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GoToForm goToForm = new GoToForm(richTextBox1);
+        }
+
+        private void addLineNumbersToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            AddLineNumbers();
+        }
+
+        private void removeLineNumbersToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            LineNumberTextBox.Clear();
+        }
+
+        private void richTextBox1_MouseDown(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        private void newToolStripButton_Click(object sender, EventArgs e)
+        {
+            richTextBox1.Clear();
+        }
+
+        private void openToolStripButton_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.ShowDialog(); //Shows the dialog   
+            if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK && openFileDialog.FileName.Contains(".txt")) //Checks if it's all ok and if the file name contains .txt  
+            {
+                string open = File.ReadAllText(openFileDialog.FileName); //Reads the text from file  
+                richTextBox1.Text = open; //Shows the reded text in the textbox  
+            }
+            else //If something goes wrong...  
+            {
+                MessageBox.Show("The file you've chosen is not a text file");
+            }
+        }
+
+        private void saveToolStripButton_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.ShowDialog(); //Opens the Show File Dialog  
+            if (saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK) //Check if it's all ok  
+            {
+                string name = saveFileDialog.FileName + ".txt"; //Just to make sure the extension is .txt  
+                File.WriteAllText(name, richTextBox1.Text); //Writes the text to the file and saves it               
+            }
+        }
+
+        private void cutToolStripButton_Click(object sender, EventArgs e)
+        {
+            richTextBox1.Cut();
         }
     }
 }
