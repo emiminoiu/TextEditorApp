@@ -1,4 +1,6 @@
-﻿namespace TextEditor
+﻿using System;
+
+namespace TextEditor
 {
     partial class Form1
     {
@@ -59,15 +61,22 @@
             this.goToLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addLineNumbersToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.removeLineNumbersToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.searchInFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.searchInFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.columnEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clipboardHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lineOperationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sortLinesAsIntegersAscendingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sortLinesAsIntegersDescendingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sortLinesLexicographicallyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sortLinesLexicographicallyDescendingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.indexToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.searchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.richTextBox2 = new System.Windows.Forms.RichTextBox();
-            this.LineNumberTextBox = new System.Windows.Forms.RichTextBox();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.newToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.openToolStripButton = new System.Windows.Forms.ToolStripButton();
@@ -79,9 +88,15 @@
             this.pasteToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.helpToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.tabFiles = new System.Windows.Forms.TabControl();
+            this.tabItem = new System.Windows.Forms.TabPage();
+            this.LineNumberTextBox = new System.Windows.Forms.RichTextBox();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
+            this.tabFiles.SuspendLayout();
+            this.tabItem.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -94,7 +109,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(812, 33);
+            this.menuStrip1.Size = new System.Drawing.Size(828, 33);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -113,7 +128,8 @@
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(50, 29);
-            this.fileToolStripMenuItem.Text = "&File";
+            this.fileToolStripMenuItem.Text = "File";
+            this.fileToolStripMenuItem.Click += new System.EventHandler(this.fileToolStripMenuItem_Click);
             // 
             // newToolStripMenuItem
             // 
@@ -290,7 +306,13 @@
             this.findAndReplaceToolStripMenuItem,
             this.goToLineToolStripMenuItem,
             this.addLineNumbersToolStripMenuItem1,
-            this.removeLineNumbersToolStripMenuItem1});
+            this.removeLineNumbersToolStripMenuItem1,
+            this.searchInFileToolStripMenuItem,
+            this.searchInFolderToolStripMenuItem,
+            this.cToolStripMenuItem,
+            this.columnEditorToolStripMenuItem,
+            this.clipboardHistoryToolStripMenuItem,
+            this.lineOperationsToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(65, 29);
             this.toolsToolStripMenuItem.Text = "&Tools";
@@ -335,6 +357,80 @@
             this.removeLineNumbersToolStripMenuItem1.Text = "Remove Line Numbers";
             this.removeLineNumbersToolStripMenuItem1.Click += new System.EventHandler(this.removeLineNumbersToolStripMenuItem1_Click);
             // 
+            // searchInFileToolStripMenuItem
+            // 
+            this.searchInFileToolStripMenuItem.Name = "searchInFileToolStripMenuItem";
+            this.searchInFileToolStripMenuItem.Size = new System.Drawing.Size(274, 30);
+            this.searchInFileToolStripMenuItem.Text = "Search in File";
+            this.searchInFileToolStripMenuItem.Click += new System.EventHandler(this.searchInFileToolStripMenuItem_Click);
+            // 
+            // searchInFolderToolStripMenuItem
+            // 
+            this.searchInFolderToolStripMenuItem.Name = "searchInFolderToolStripMenuItem";
+            this.searchInFolderToolStripMenuItem.Size = new System.Drawing.Size(274, 30);
+            this.searchInFolderToolStripMenuItem.Text = "Search In Folder";
+            this.searchInFolderToolStripMenuItem.Click += new System.EventHandler(this.searchInFolderToolStripMenuItem_Click);
+            // 
+            // cToolStripMenuItem
+            // 
+            this.cToolStripMenuItem.Name = "cToolStripMenuItem";
+            this.cToolStripMenuItem.Size = new System.Drawing.Size(274, 30);
+            this.cToolStripMenuItem.Text = "C#";
+            this.cToolStripMenuItem.Click += new System.EventHandler(this.cToolStripMenuItem_Click);
+            // 
+            // columnEditorToolStripMenuItem
+            // 
+            this.columnEditorToolStripMenuItem.Name = "columnEditorToolStripMenuItem";
+            this.columnEditorToolStripMenuItem.Size = new System.Drawing.Size(274, 30);
+            this.columnEditorToolStripMenuItem.Text = "ColumnEditor";
+            this.columnEditorToolStripMenuItem.Click += new System.EventHandler(this.columnEditorToolStripMenuItem_Click);
+            // 
+            // clipboardHistoryToolStripMenuItem
+            // 
+            this.clipboardHistoryToolStripMenuItem.Name = "clipboardHistoryToolStripMenuItem";
+            this.clipboardHistoryToolStripMenuItem.Size = new System.Drawing.Size(274, 30);
+            this.clipboardHistoryToolStripMenuItem.Text = "ClipboardHistory";
+            this.clipboardHistoryToolStripMenuItem.Click += new System.EventHandler(this.clipboardHistoryToolStripMenuItem_Click);
+            // 
+            // lineOperationsToolStripMenuItem
+            // 
+            this.lineOperationsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.sortLinesAsIntegersAscendingToolStripMenuItem,
+            this.sortLinesAsIntegersDescendingToolStripMenuItem,
+            this.sortLinesLexicographicallyToolStripMenuItem,
+            this.sortLinesLexicographicallyDescendingToolStripMenuItem});
+            this.lineOperationsToolStripMenuItem.Name = "lineOperationsToolStripMenuItem";
+            this.lineOperationsToolStripMenuItem.Size = new System.Drawing.Size(274, 30);
+            this.lineOperationsToolStripMenuItem.Text = "LineOperations";
+            // 
+            // sortLinesAsIntegersAscendingToolStripMenuItem
+            // 
+            this.sortLinesAsIntegersAscendingToolStripMenuItem.Name = "sortLinesAsIntegersAscendingToolStripMenuItem";
+            this.sortLinesAsIntegersAscendingToolStripMenuItem.Size = new System.Drawing.Size(409, 30);
+            this.sortLinesAsIntegersAscendingToolStripMenuItem.Text = "Sort Lines as Integers Ascending";
+            this.sortLinesAsIntegersAscendingToolStripMenuItem.Click += new System.EventHandler(this.sortLinesAsIntegersAscendingToolStripMenuItem_Click);
+            // 
+            // sortLinesAsIntegersDescendingToolStripMenuItem
+            // 
+            this.sortLinesAsIntegersDescendingToolStripMenuItem.Name = "sortLinesAsIntegersDescendingToolStripMenuItem";
+            this.sortLinesAsIntegersDescendingToolStripMenuItem.Size = new System.Drawing.Size(409, 30);
+            this.sortLinesAsIntegersDescendingToolStripMenuItem.Text = "Sort Lines as Integers Descending";
+            this.sortLinesAsIntegersDescendingToolStripMenuItem.Click += new System.EventHandler(this.sortLinesAsIntegersDescendingToolStripMenuItem_Click);
+            // 
+            // sortLinesLexicographicallyToolStripMenuItem
+            // 
+            this.sortLinesLexicographicallyToolStripMenuItem.Name = "sortLinesLexicographicallyToolStripMenuItem";
+            this.sortLinesLexicographicallyToolStripMenuItem.Size = new System.Drawing.Size(409, 30);
+            this.sortLinesLexicographicallyToolStripMenuItem.Text = "Sort Lines Lexicographically Ascending";
+            this.sortLinesLexicographicallyToolStripMenuItem.Click += new System.EventHandler(this.sortLinesLexicographicallyToolStripMenuItem_Click);
+            // 
+            // sortLinesLexicographicallyDescendingToolStripMenuItem
+            // 
+            this.sortLinesLexicographicallyDescendingToolStripMenuItem.Name = "sortLinesLexicographicallyDescendingToolStripMenuItem";
+            this.sortLinesLexicographicallyDescendingToolStripMenuItem.Size = new System.Drawing.Size(409, 30);
+            this.sortLinesLexicographicallyDescendingToolStripMenuItem.Text = "Sort Lines Lexicographically Descending";
+            this.sortLinesLexicographicallyDescendingToolStripMenuItem.Click += new System.EventHandler(this.sortLinesLexicographicallyDescendingToolStripMenuItem_Click);
+            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -376,42 +472,6 @@
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(167, 30);
             this.aboutToolStripMenuItem.Text = "&About...";
             // 
-            // richTextBox1
-            // 
-            this.richTextBox1.Location = new System.Drawing.Point(65, 135);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(753, 539);
-            this.richTextBox1.TabIndex = 1;
-            this.richTextBox1.Text = "";
-            this.richTextBox1.SelectionChanged += new System.EventHandler(this.richTextBox1_SelectionChanged);
-            this.richTextBox1.VScroll += new System.EventHandler(this.richTextBox1_VScroll);
-            this.richTextBox1.Click += new System.EventHandler(this.richTextBox1_Click);
-            this.richTextBox1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.richTextBox1_MouseClick);
-            this.richTextBox1.TextChanged += new System.EventHandler(this.richTextBox1_TextChanged);
-            this.richTextBox1.DoubleClick += new System.EventHandler(this.richTextBox1_DoubleClick);
-            this.richTextBox1.Enter += new System.EventHandler(this.richTextBox1_Enter);
-            this.richTextBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.richTextBox1_MouseDown);
-            // 
-            // richTextBox2
-            // 
-            this.richTextBox2.Location = new System.Drawing.Point(65, 573);
-            this.richTextBox2.Name = "richTextBox2";
-            this.richTextBox2.Size = new System.Drawing.Size(0, 248);
-            this.richTextBox2.TabIndex = 3;
-            this.richTextBox2.Text = "";
-            this.richTextBox2.Visible = false;
-            // 
-            // LineNumberTextBox
-            // 
-            this.LineNumberTextBox.Cursor = System.Windows.Forms.Cursors.PanNE;
-            this.LineNumberTextBox.Location = new System.Drawing.Point(-6, 135);
-            this.LineNumberTextBox.Name = "LineNumberTextBox";
-            this.LineNumberTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.LineNumberTextBox.Size = new System.Drawing.Size(65, 539);
-            this.LineNumberTextBox.TabIndex = 4;
-            this.LineNumberTextBox.Text = "";
-            this.LineNumberTextBox.VScroll += new System.EventHandler(this.LineNumberTextBox_VScroll);
-            // 
             // toolStrip1
             // 
             this.toolStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
@@ -428,7 +488,7 @@
             this.helpToolStripButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 33);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(812, 31);
+            this.toolStrip1.Size = new System.Drawing.Size(828, 31);
             this.toolStrip1.TabIndex = 5;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -518,23 +578,81 @@
             this.helpToolStripButton.Size = new System.Drawing.Size(28, 28);
             this.helpToolStripButton.Text = "He&lp";
             // 
-            // panel1
+            // listBox1
             // 
-            this.panel1.Location = new System.Drawing.Point(0, 80);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(812, 49);
-            this.panel1.TabIndex = 6;
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.ItemHeight = 20;
+            this.listBox1.Location = new System.Drawing.Point(4, 651);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(812, 184);
+            this.listBox1.TabIndex = 7;
+            this.listBox1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseDoubleClick);
+            // 
+            // tabFiles
+            // 
+            this.tabFiles.Controls.Add(this.tabItem);
+            this.tabFiles.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
+            this.tabFiles.ItemSize = new System.Drawing.Size(99, 30);
+            this.tabFiles.Location = new System.Drawing.Point(0, 84);
+            this.tabFiles.Name = "tabFiles";
+            this.tabFiles.SelectedIndex = 0;
+            this.tabFiles.Size = new System.Drawing.Size(816, 483);
+            this.tabFiles.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
+            this.tabFiles.TabIndex = 6;
+            this.tabFiles.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.tabControl1_DrawItem);
+            this.tabFiles.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tabControl1_MouseDown);
+            // 
+            // tabItem
+            // 
+            this.tabItem.BackColor = System.Drawing.Color.White;
+            this.tabItem.Controls.Add(this.LineNumberTextBox);
+            this.tabItem.Controls.Add(this.richTextBox1);
+            this.tabItem.Location = new System.Drawing.Point(4, 34);
+            this.tabItem.Name = "tabItem";
+            this.tabItem.Padding = new System.Windows.Forms.Padding(3);
+            this.tabItem.Size = new System.Drawing.Size(808, 445);
+            this.tabItem.TabIndex = 0;
+            this.tabItem.Text = "New";
+            // 
+            // LineNumberTextBox
+            // 
+            this.LineNumberTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.LineNumberTextBox.Font = new System.Drawing.Font("Courier New", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.LineNumberTextBox.Location = new System.Drawing.Point(0, 6);
+            this.LineNumberTextBox.Name = "LineNumberTextBox";
+            this.LineNumberTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
+            this.LineNumberTextBox.Size = new System.Drawing.Size(37, 408);
+            this.LineNumberTextBox.TabIndex = 10;
+            this.LineNumberTextBox.Text = "";
+            this.LineNumberTextBox.FontChanged += new System.EventHandler(this.LineNumberTextBox_FontChanged);
+            this.LineNumberTextBox.TextChanged += new System.EventHandler(this.LineNumberTextBox_TextChanged_2);
+            this.LineNumberTextBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LineNumberTextBox_MouseDown);
+            // 
+            // richTextBox1
+            // 
+            this.richTextBox1.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.richTextBox1.Font = new System.Drawing.Font("Courier New", 10F);
+            this.richTextBox1.Location = new System.Drawing.Point(43, 3);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.Size = new System.Drawing.Size(762, 421);
+            this.richTextBox1.TabIndex = 11;
+            this.richTextBox1.Text = "";
+            this.richTextBox1.SelectionChanged += new System.EventHandler(this.richTextBox1_SelectionChanged);
+            this.richTextBox1.VScroll += new System.EventHandler(this.richTextBox1_VScroll);
+            this.richTextBox1.Click += new System.EventHandler(this.richTextBox1_Click);
+            this.richTextBox1.FontChanged += new System.EventHandler(this.richTextBox1_FontChanged);
+            this.richTextBox1.TextChanged += new System.EventHandler(this.richTextBox1_TextChanged);
+            this.richTextBox1.DoubleClick += new System.EventHandler(this.richTextBox1_DoubleClick);
+            this.richTextBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.richTextBox1_MouseDown);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(812, 615);
-            this.Controls.Add(this.panel1);
+            this.ClientSize = new System.Drawing.Size(828, 596);
+            this.Controls.Add(this.tabFiles);
+            this.Controls.Add(this.listBox1);
             this.Controls.Add(this.toolStrip1);
-            this.Controls.Add(this.LineNumberTextBox);
-            this.Controls.Add(this.richTextBox2);
-            this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
@@ -544,17 +662,26 @@
             this.menuStrip1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
+            this.tabFiles.ResumeLayout(false);
+            this.tabItem.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
+        private void removeLineNumbersToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void addLineNumbersToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
         private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.RichTextBox richTextBox1;
-        private System.Windows.Forms.RichTextBox richTextBox2;
-        private System.Windows.Forms.RichTextBox LineNumberTextBox;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem1;
@@ -601,7 +728,21 @@
         private System.Windows.Forms.ToolStripMenuItem removeLineNumbersToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem fontToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem colorToolStripMenuItem1;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.ToolStripMenuItem searchInFileToolStripMenuItem;
+        private System.Windows.Forms.TabControl tabFiles;
+        private System.Windows.Forms.ToolStripMenuItem searchInFolderToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem cToolStripMenuItem;
+        private System.Windows.Forms.RichTextBox LineNumberTextBox;
+        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.ToolStripMenuItem columnEditorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem clipboardHistoryToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem lineOperationsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem sortLinesAsIntegersAscendingToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem sortLinesAsIntegersDescendingToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem sortLinesLexicographicallyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem sortLinesLexicographicallyDescendingToolStripMenuItem;
+        private System.Windows.Forms.TabPage tabItem;
     }
 }
 

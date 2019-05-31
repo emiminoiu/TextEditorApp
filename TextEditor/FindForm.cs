@@ -18,25 +18,25 @@ namespace TextEditor
         [DllImport("user32.dll", SetLastError = true)]
         internal static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
 
-       
+        public List<SearchedItems> Items = new List<SearchedItems>();
         public  bool clicked { get; set; }
        
         static bool firstFind = true;
         static bool firstReplace = true;
         static int startIndex;
         RichTextBox richtext;
-        RichTextBox richtext2;
+        ListBox listbox1;
         public Color x;
-        Form MainWindow;
+        
         public static FontStyle y;
 
-        public FindForm(Form f)
+        public FindForm(RichTextBox R,ListBox R1)
         {
             this.Show();
             InitializeComponent();
-            //richtext = R;
-            //richtext2 = R1;
-            MainWindow = f;
+            richtext = R;
+            listbox1 = R1;
+            
         }
 
         public FindForm()
@@ -56,7 +56,7 @@ namespace TextEditor
             int s_start = rtb.SelectionStart, startIndex = 0, index;
             while ((index = rtb.Text.IndexOf(word, startIndex)) != -1)
             {
-
+                
                 rtb.Select(index, word.Length);
                 rtb.SelectionBackColor = color;
                 rtb.SelectionFont = new Font(rtb.Font, y);
@@ -146,7 +146,7 @@ namespace TextEditor
 
             }
             richtext.SelectionBackColor = Color.White;
-            richtext2.Clear();
+            //listbox1.Clear();
            
             this.Close();
 
@@ -176,9 +176,9 @@ namespace TextEditor
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            richtext2.Clear();
-            
-          
+            // listbox1.Clear();
+
+            listbox1.Items.Clear();
             Find(richtext, textBox1.Text, x, y);
             startIndex = 0;
             clicked = true;
@@ -190,42 +190,47 @@ namespace TextEditor
                 count++;
                 if (x.Contains(textBox1.Text))
                 {
-                    richtext2.AppendText("Line" + count + ":  ");
+                    SearchedItems s = new SearchedItems();
+                    s.LineNumber = count;
+                    s.LineText = x;
+                    s.findForm = true;
+                    // Items.Add(s);
+                    listbox1.Items.Add(s);
+                    //listbox1.AppendText(Items.ToString());
+                    //richtext2.AppendText("Line" + s.LineNumber + ":  ");
                     Console.WriteLine(x + "\n");
-                    richtext2.AppendText(x + "\n");
-                    richtext2.Visible = true;
+                   // richtext2.AppendText(s.LineText + "\n");
+                    listbox1.Visible = true;
                     items.Add(x);
 
                 }
             }
-            Select(richtext2, textBox1.Text,Color.Yellow, FontStyle.Bold);
-            
-            //richtext
+            Select(listbox1, textBox1.Text,Color.Yellow, FontStyle.Bold);
            
         }
 
-        private void Select(RichTextBox richtext2, string text, Color x, FontStyle y)
+        private void Select(ListBox listBox, string text, Color x, FontStyle y)
         {
-            richtext2.Select(0, richtext2.TextLength);
-            richtext2.SelectionBackColor = richtext2.BackColor;
-            richtext2.SelectionFont = richtext2.Font;
-            if (text == "")
-            {
-                return;
-            }
+            //listBox.Select(0, listBox.TextLength);
+            //listBox.SelectionBackColor = listBox.BackColor;
+            //listBox.SelectionFont = listBox.Font;
+            //if (text == "")
+            //{
+            //    return;
+            //}
 
-            int s_start = richtext2.SelectionStart, startIndex = 0, index;
-            while ((index = richtext2.Text.IndexOf(text, startIndex)) != -1)
-            {
+            //int s_start = listBox.SelectionStart, startIndex = 0, index;
+            //while ((index = listBox.Text.IndexOf(text, startIndex)) != -1)
+            //{
 
-                richtext2.Select(index, text.Length);
-                richtext2.SelectionBackColor = x;
-                richtext2.SelectionFont = new Font(richtext2.Font, y);
-                startIndex = index + text.Length;
-            }
-            richtext2.SelectionStart = s_start;
-            richtext2.SelectionLength = 0;
-            richtext2.SelectionColor = x;
+            //    listBox.Select(index, text.Length);
+            //    listBox.SelectionBackColor = x;
+            //    listBox.SelectionFont = new Font(listBox.Font, y);
+            //    startIndex = index + text.Length;
+            //}
+            //listBox.SelectionStart = s_start;
+            //listBox.SelectionLength = 0;
+            //listBox.SelectionColor = x;
         }
 
         private void lblFind_Click(object sender, EventArgs e)
