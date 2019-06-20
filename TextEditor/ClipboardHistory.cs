@@ -12,38 +12,29 @@ namespace TextEditor
 {
     public partial class ClipboardHistory : Form
     {
-        int position;
-        bool firstCopy = true;
+     
+        TabControl tabFile;
         RichTextBox richTextBox;
-        public ClipboardHistory(RichTextBox R1)
+        RichTextBox richTextBox2;
+        public ClipboardHistory(TabControl R1, RichTextBox richTextBox)
         {
             Show();
-            richTextBox = R1;
+            tabFile = R1;
+            richTextBox2 = richTextBox; 
             InitializeComponent();
         }
         public void AddItem()
-        { 
-            listBoxClipboard.Items.Add(richTextBox.SelectedText);
+        {
+            richTextBox2 = tabFile.SelectedTab.Controls[1] as RichTextBox;
+            listBoxClipboard.Items.Add(richTextBox2.SelectedText);
         }
 
         private void listBoxClipboard_Click(object sender, EventArgs e)
         {
+            richTextBox = tabFile.SelectedTab.Controls[1] as RichTextBox;
             if (listBoxClipboard.SelectedItem != null)
             {
-                //if (firstCopy)
-                //{
-                //    position = richTextBox.SelectionStart;
-                //    richTextBox.Text = richTextBox.Text.Insert(richTextBox.SelectionStart, listBoxClipboard.SelectedItem.ToString());
-                //    position += listBoxClipboard.SelectedItem.ToString().Length;
-                //    firstCopy = false;
-                //}
-                //else
-                //{ 
-                      
-                //    richTextBox.Text = richTextBox.Text.Insert(position, listBoxClipboard.SelectedItem.ToString());
-                //    position += richTextBox.SelectionStart + listBoxClipboard.SelectedItem.ToString().Length;
-                //}
-              
+         
                 int p = richTextBox.SelectionStart;
                 int l = listBoxClipboard.SelectedItem.ToString().Length;
 

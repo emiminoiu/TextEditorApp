@@ -634,6 +634,7 @@ namespace TextEditor
             this.richTextBox1.Font = new System.Drawing.Font("Courier New", 10F);
             this.richTextBox1.Location = new System.Drawing.Point(43, 3);
             this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.ShortcutsEnabled = false;
             this.richTextBox1.Size = new System.Drawing.Size(762, 421);
             this.richTextBox1.TabIndex = 11;
             this.richTextBox1.Text = "";
@@ -643,7 +644,6 @@ namespace TextEditor
             this.richTextBox1.FontChanged += new System.EventHandler(this.richTextBox1_FontChanged);
             this.richTextBox1.TextChanged += new System.EventHandler(this.richTextBox1_TextChanged);
             this.richTextBox1.DoubleClick += new System.EventHandler(this.richTextBox1_DoubleClick);
-            this.richTextBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.richTextBox1_MouseDown);
             // 
             // Form1
             // 

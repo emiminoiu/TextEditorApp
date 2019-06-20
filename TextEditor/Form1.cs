@@ -14,30 +14,94 @@ namespace TextEditor
 {
     public partial class Form1 : Form
     {
+        Dictionary<RichTextBox, Undoer> dictionary = new Dictionary<RichTextBox, Undoer>();
         RichTextBox richTextBox;
         RichTextBox lineTextBox;
         Dictionary<String, TabPage> files;
         int count = 1;
+      
         //I'm using this with filesystemwatcher when modifying content in other opened files
         double clicked;
         public string fileName;
         //I'm using this to count tab pages
-        static int pageNumber = 1;
+        static int tabNumber = 1;
         //I'm using this when open the clipboardhistory page
         public ClipboardHistory ch;
         //I'm testing if clipboard is on where making cut/copy operation in richtextbox
         static bool clipboardOn = false;
+        RichTextBox richTextBoxClipboard;
+   
+        ContextMenu menu;
         public Form1()
         {
             InitializeComponent();
             files = new Dictionary<string, TabPage>();
             files.Add("New", tabItem);
+            richTextBox1.TextChanged += new EventHandler(TextBoxTextChanged);
+            Undoer undoer = new Undoer(richTextBox1);
+            dictionary[richTextBox1] = undoer;
+            // create a context menu
+            menu = new ContextMenu();
+            menu.MenuItems.AddRange(new MenuItem[] {
+                    new MenuItem("&UndoWords",  new EventHandler( undoer.undoWord_Click  )),
+                    new MenuItem("&RedoWords",  new EventHandler( undoer.redoWord_Click  )),
+                    new MenuItem("&UndoLetters",  new EventHandler(undoer.undoLetter_Click  )),
+                    new MenuItem("&RedoLetters",  new EventHandler( undoer.redoLetter_Click  )),
+            });
+
+            this.richTextBox1.ContextMenu = menu;         
+            // or create keypress event 
+            this.richTextBox1.KeyDown += new KeyEventHandler(textBox_KeyDown);
+            this.KeyDown += new KeyEventHandler(textBox_KeyDown);
+        }
+        protected void TextBoxTextChanged(object sender, EventArgs e)
+        {
+            Undoer u = null;
+            foreach(var x in dictionary)
+            {
+                if(x.Key.Equals(tabFiles.SelectedTab.Controls[1]))
+                {
+                    u = x.Value;
+                }
+            }
+            u.Save();         
+        }
+        protected void textBox_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+        {
+            if (e.Modifiers == (System.Windows.Forms.Keys.Control))
+            {
+                if (e.KeyCode == Keys.Z)
+                {
+                    Undoer undoer = null;
+                    foreach (var x in dictionary)
+                    {
+                        if (x.Key.Equals(tabFiles.SelectedTab.Controls[1]))
+                        {
+                            undoer = x.Value;
+                        }
+                    }
+                    undoer.UndoWords();
+                    //e.Handled = true;
+                }
+                if (e.KeyCode == Keys.Y)
+                {
+                    Undoer undoer = null;
+                    foreach (var x in dictionary)
+                    {
+                        if (x.Key.Equals(tabFiles.SelectedTab.Controls[1]))
+                        {
+                            undoer = x.Value;
+                        }
+                    }
+                    undoer.RedoWords();
+                    //e.Handled = true;
+                }
+            }
         }
         public void ResizeFrame()
         {
             this.Size = new System.Drawing.Size(570, 550);
         }
-
         private void watch(string path)
         {
             FileSystemWatcher watcher = new FileSystemWatcher();
@@ -57,16 +121,8 @@ namespace TextEditor
                 DialogResult dialogResult = MessageBox.Show("The file has been modified,do you want to load the changes?", "File Modified", MessageBoxButtons.YesNo);
                 if (dialogResult == DialogResult.Yes)
                 {
-                    //using (var fileStream = new FileStream(fileName, FileMode.OpenOrCreate))
-                    //{
-                    //    using (var reader = new StreamReader(fileStream))
-                    //    {
-                    //        richTextBox1.Invoke(new Action(() => { richTextBox1.Text = reader.ReadToEnd(); }));
-                    //        reader.Close();
-                    //    }
-                    //}
-                    string open = File.ReadAllText(fileName); //Re
-                                                              //richTextBox1.Text = open;
+                  
+                    string open = File.ReadAllText(fileName);                                                              
                     richTextBox1.Invoke(new Action(() => { richTextBox1.Text = open; }));
 
                 }
@@ -401,35 +457,51 @@ namespace TextEditor
                     }
                 }
             }
+           
+            tabNumber++;
             TabPage first = tabFiles.TabPages[0];
             RichTextBox txt = first.Controls[0] as RichTextBox;
             RichTextBox txt2 = first.Controls[1] as RichTextBox;
             TabPage page = new TabPage();
             RichTextBox rtb = new RichTextBox();
             RichTextBox rtb2 = new RichTextBox();
-
-         
             page.Bounds = first.Bounds;
             rtb.Bounds = txt.Bounds;
-          
             rtb2.Bounds = txt2.Bounds;
-            richTextBox = rtb;
-            lineTextBox = rtb2;
+                    
+          
+            
+            richTextBox = rtb2;
+            lineTextBox = rtb;
+            rtb2.ShortcutsEnabled = false;
             rtb2.ScrollBars = 0;
-            rtb.Click += richTextBox1_ClickTabs;
-            rtb.FontChanged += richTextBox1_FontChangedTabs;
-            rtb.SelectionChanged += richTextBox1_SelectionChangedTabs;
-            rtb.TextChanged += richTextBox1_TextChangedTabs;
-            rtb.VScroll += richTextBox1_VScrollTabs;
+            rtb2.Click += richTextBox1_ClickTabs;
+            rtb2.FontChanged += richTextBox1_FontChangedTabs;
+            rtb2.SelectionChanged += richTextBox1_SelectionChangedTabs;
+            rtb2.TextChanged += richTextBox1_TextChangedTabs;
+            rtb2.KeyDown += textBox_KeyDown;
+            rtb2.VScroll += richTextBox1_VScrollTabs;
+            
+            rtb2.TextChanged += TextBoxTextChanged;
             page.Controls.Add(rtb);
             page.Controls.Add(rtb2);
+            Undoer undoer = new Undoer(rtb2);
+            dictionary[rtb2] = undoer;
+            menu = new ContextMenu();
+            menu.MenuItems.AddRange(new MenuItem[] {
+                    new MenuItem("&UndoWords",  new EventHandler( undoer.undoWord_Click  )),
+                    new MenuItem("&RedoWords",  new EventHandler( undoer.redoWord_Click  )),
+                    new MenuItem("&UndoLetters",  new EventHandler( undoer.undoLetter_Click  )),
+                    new MenuItem("&RedoLetters",  new EventHandler( undoer.redoLetter_Click  )),
+            });
+            rtb2.ContextMenu = menu;
             string title = index == 0 ? "New" : ("New " + index);
             page.Text = title;
             rtb.Text = "";
             files[title] = page;
             tabFiles.TabPages.Add(page);
             tabFiles.SelectedTab = page;
-           
+
         }
 
         private void openToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -522,12 +594,15 @@ namespace TextEditor
 
         private void copyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            richTextBox1.Copy();
-            if (clipboardOn)
+            if (richTextBoxClipboard != null)
             {
-                ch.AddItem();
-            }
+                richTextBoxClipboard.Copy();
+                if (clipboardOn)
+                {
+                    ch.AddItem();
+                }
 
+            }
         }
 
         private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
@@ -567,53 +642,53 @@ namespace TextEditor
 
 
 
-        private void richTextBox1_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button == System.Windows.Forms.MouseButtons.Right)
-            {
-                if (richTextBox1.SelectedText != "")
-                {
-                    var x = richTextBox1.SelectedText;
-                    ContextMenuStrip cm = new ContextMenuStrip();
-                    var font = cm.Items.Add("Font");
-                    font.Click += new EventHandler(Font_Clicked);
-                    var color = cm.Items.Add("Color");
-                    color.Click += new EventHandler(Color_Clicked);
-                    var uppercase = cm.Items.Add("UpperCase");
-                    uppercase.Click += new EventHandler(Uppercase_Clicked);
-                    var lowercase = cm.Items.Add("LowerCase");
-                    lowercase.Click += new EventHandler(Lowercase_Clicked);
-                    var cut = cm.Items.Add("Cut");
-                    cut.Click += new EventHandler(cut_Clicked);
-                    var copy = cm.Items.Add("Copy");
-                    copy.Click += new EventHandler(copy_Clicked);
-                    var paste = cm.Items.Add("Paste");
-                    paste.Click += new EventHandler(Paste_Clicked);
-                    var copyAll = cm.Items.Add("Copy All");
-                    copyAll.Click += new EventHandler(copyAll_Clicked);
-                    var selectAll = cm.Items.Add("Select All");
-                    selectAll.Click += new EventHandler(selectAll_Clicked);
-                    // cm.add(Equals(Font), 1, Equals(Font), "Font");
-                    cm.Show(richTextBox1, e.Location);
+        //private void richTextBox1_MouseDown(object sender, MouseEventArgs e)
+        //{
+        //    if (e.Button == System.Windows.Forms.MouseButtons.Right)
+        //    {
+        //        if (richTextBox1.SelectedText != "")
+        //        {
+        //            var x = richTextBox1.SelectedText;
+        //            ContextMenuStrip cm = new ContextMenuStrip();
+        //            var font = cm.Items.Add("Font");
+        //            font.Click += new EventHandler(Font_Clicked);
+        //            var color = cm.Items.Add("Color");
+        //            color.Click += new EventHandler(Color_Clicked);
+        //            var uppercase = cm.Items.Add("UpperCase");
+        //            uppercase.Click += new EventHandler(Uppercase_Clicked);
+        //            var lowercase = cm.Items.Add("LowerCase");
+        //            lowercase.Click += new EventHandler(Lowercase_Clicked);
+        //            var cut = cm.Items.Add("Cut");
+        //            cut.Click += new EventHandler(cut_Clicked);
+        //            var copy = cm.Items.Add("Copy");
+        //            copy.Click += new EventHandler(copy_Clicked);
+        //            var paste = cm.Items.Add("Paste");
+        //            paste.Click += new EventHandler(Paste_Clicked);
+        //            var copyAll = cm.Items.Add("Copy All");
+        //            copyAll.Click += new EventHandler(copyAll_Clicked);
+        //            var selectAll = cm.Items.Add("Select All");
+        //            selectAll.Click += new EventHandler(selectAll_Clicked);
+        //            // cm.add(Equals(Font), 1, Equals(Font), "Font");
+        //            cm.Show(richTextBox1, e.Location);
 
-                    Console.WriteLine(x);
-                }
-                else
-                {
-                    var x = richTextBox1.SelectedText;
-                    ContextMenuStrip cm = new ContextMenuStrip();
-                    var paste = cm.Items.Add("Paste");
-                    paste.Click += new EventHandler(Paste_Clicked);
-                    var selectAll = cm.Items.Add("Select All");
-                    selectAll.Click += new EventHandler(selectAll_Clicked);
-                    var copyAll = cm.Items.Add("Copy All");
-                    copyAll.Click += new EventHandler(copyAll_Clicked);
+        //            Console.WriteLine(x);
+        //        }
+        //        else
+        //        {
+        //            var x = richTextBox1.SelectedText;
+        //            ContextMenuStrip cm = new ContextMenuStrip();
+        //            var paste = cm.Items.Add("Paste");
+        //            paste.Click += new EventHandler(Paste_Clicked);
+        //            var selectAll = cm.Items.Add("Select All");
+        //            selectAll.Click += new EventHandler(selectAll_Clicked);
+        //            var copyAll = cm.Items.Add("Copy All");
+        //            copyAll.Click += new EventHandler(copyAll_Clicked);
 
 
-                    cm.Show(richTextBox1, e.Location);
-                }
-            }
-        }
+        //            cm.Show(richTextBox1, e.Location);
+        //        }
+        //    }
+        //}
 
         private void selectAll_Clicked(object sender, EventArgs e)
         {
@@ -628,7 +703,7 @@ namespace TextEditor
 
         private void copy_Clicked(object sender, EventArgs e)
         {
-            richTextBox1.Copy();
+            richTextBoxClipboard.Copy();
             if (clipboardOn)
             {
                 ch.AddItem();
@@ -860,7 +935,7 @@ namespace TextEditor
                             File.WriteAllText(key, rtb.Text);
                         }
                         this.tabFiles.TabPages.RemoveAt(i);
-                        pageNumber--;
+                        //pageNumber--;
                         count--;
                         break;
                     }
@@ -992,7 +1067,8 @@ namespace TextEditor
         private void clipboardHistoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
             clipboardOn = true;
-            ch = new ClipboardHistory(richTextBox1);
+            richTextBoxClipboard = tabFiles.SelectedTab.Controls[0] as RichTextBox;
+            ch = new ClipboardHistory(tabFiles, richTextBoxClipboard);
         }
 
         private void sortLinesLexicographicallyToolStripMenuItem_Click(object sender, EventArgs e)
