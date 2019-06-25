@@ -12,12 +12,15 @@ namespace TextEditor
     {
         int currentWord;
         RichTextBox txtBox;
+        int position = 0;
 
         protected Dictionary<RichTextBox, string> dictionary = new Dictionary<RichTextBox, string>();
         protected List<string> LastData = new List<string>();
         protected int undoCount = 0;
+
         Stack<string> undoList = new Stack<string>();
         Stack<string> redoList = new Stack<string>();
+
         protected bool undoing = false;
         protected bool redoing = false;
 
@@ -48,54 +51,63 @@ namespace TextEditor
         public void UndoWords()
         {
             List<string> allOperands = new List<string>();
+            List<string> allOperandsWithoutSpaces = new List<string>();
             string sentence = txtBox.Text;
-
+            int count = 0;
             string[] lineOperands = Regex.Split(sentence, @"\n");
             foreach (var operand in lineOperands)
             {
                 allOperands.AddRange(Regex.Split(operand, @" "));
             }
-            int count = 0;
-            foreach (string searchString in allOperands)
+
+            allOperands.ForEach(a => a = a.Trim());
+            foreach (var operand in allOperands)
+            {
+                if (operand != "")
+                {
+                    allOperandsWithoutSpaces.Add(operand);
+                }
+            }
+            foreach (string searchString in allOperandsWithoutSpaces)
             {
                 count++;
-                if (count == allOperands.Count)
+                if (count == allOperandsWithoutSpaces.Count())
                 {
-                    //if (searchString != "")
-                    //{
                     try
                     {
                         undoing = true;
                         currentWord = searchString.Length + 1;
                         undoCount += searchString.Length + 1;
-                       
+
                         //  txtBox.Text = dictionary.Values.ElementAt(dictionary.Count - undoCount - 1);
-                        if (allOperands.Count == 1)
+                        if (allOperandsWithoutSpaces.Count == 1)
                         {
                             txtBox.Text = "";
                             return;
                         }
+                        redoList.Push(undoList.First());
+                       
                         //  LastData[LastData.Count - undoCount - 1] = LastData[LastData.Count - undoCount - 1].TrimEnd();
+                        //string lastWord = undoList.First().Split(' ').Last();
                         txtBox.Text = undoList.ElementAt(searchString.Count());
+                        txtBox.SelectionStart = undoList.Count();
+                        txtBox.SelectionLength = 1;
                         for (int i = 1; i <= searchString.Count() + 1; i++)
                         {
-                          
-                           // redoList.Push(undoList.ElementAt(searchString.Count()-i));
                             undoList.Pop();
                         }
-                                                      /*LastData[LastData.Count - undoCount - 1];*/
-                     
+                        /*LastData[LastData.Count - undoCount - 1];*/
+
                         //++undoCount;
                     }
                     catch { }
                     finally { this.undoing = false; }
-
-
                     break;
                 }
 
             }
         }
+
         public void RedoWords()
         {
             try
@@ -105,8 +117,10 @@ namespace TextEditor
 
                 redoing = true;
                 undoCount -= currentWord;
+
                 //   LastData[LastData.Count - undoCount - 1] = LastData[LastData.Count - undoCount - 1].Trim();
-                txtBox.Text = redoList.ElementAt(currentWord);
+                var x = redoList.Pop();
+                txtBox.Text = x;
                 // txtBox.Text = LastData[LastData.Count - undoCount - 1];
             }
             catch { }
@@ -117,15 +131,25 @@ namespace TextEditor
         {
             if (undoing || redoing)
                 return;
-            //if (dictionary.Values.ElementAt(dictionary.Count - 1).Equals(txtBox.Text))
-            //    return;
-           
-            //if (LastData[LastData.Count - 1] == txtBox.Text)
-            //    return;
-            
-            undoList.Push(txtBox.Text.Trim());
-            LastData.Add(txtBox.Text);
 
+            string[] lines = txtBox.Lines.ToArray(); //This is to split the rich text box into an array
+            string richText = string.Empty;
+            foreach (string line in lines)
+            {
+                if (!string.IsNullOrEmpty(line))
+                {//Here is were you re-build the text in the rich text box with lines that have some data in them
+                    richText += line;
+                    richText += Environment.NewLine;
+                }
+                else
+                    continue;
+            }
+            //richText = richText.Substring(0, richText.Length - 2); //Need to remove the last Environment.NewLine, else it will look at it as an other line in the rick text box.
+            // txtBox.Text = richText;
+           // var resultString = Regex.Replace(txtBox.Text, @"^\s+$[\r\n]*", string.Empty, RegexOptions.Multiline);
+           
+            undoList.Push(richText);
+                
             undoCount = 0;
         }
 

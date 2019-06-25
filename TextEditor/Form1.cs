@@ -49,10 +49,12 @@ namespace TextEditor
                     new MenuItem("&RedoLetters",  new EventHandler( undoer.redoLetter_Click  )),
             });
 
-            this.richTextBox1.ContextMenu = menu;         
+            this.richTextBox1.ContextMenu = menu;
+            richTextBox1.ShortcutsEnabled = false;
             // or create keypress event 
-            this.richTextBox1.KeyDown += new KeyEventHandler(textBox_KeyDown);
-            this.KeyDown += new KeyEventHandler(textBox_KeyDown);
+            //this.richTextBox1.KeyDown += new KeyEventHandler(textBox_KeyDown);
+            //this.KeyDown += new KeyEventHandler(textBox_KeyDown);
+            richTextBox1.KeyDown += textBox_KeyDown;
         }
         protected void TextBoxTextChanged(object sender, EventArgs e)
         {
@@ -68,22 +70,23 @@ namespace TextEditor
         }
         protected void textBox_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
         {
-            if (e.Modifiers == (System.Windows.Forms.Keys.Control))
+            if (e.Modifiers == Keys.Control)
             {
-                if (e.KeyCode == Keys.Z)
+                //if (e.KeyCode == Keys.Z)
+                //{
+                Undoer undoer = null;
+                foreach (var x in dictionary)
                 {
-                    Undoer undoer = null;
-                    foreach (var x in dictionary)
+                    if (x.Key.Equals(tabFiles.SelectedTab.Controls[1]))
                     {
-                        if (x.Key.Equals(tabFiles.SelectedTab.Controls[1]))
-                        {
-                            undoer = x.Value;
-                        }
+                        undoer = x.Value;
+
                     }
-                    undoer.UndoWords();
-                    //e.Handled = true;
                 }
-                if (e.KeyCode == Keys.Y)
+                undoer.UndoWords();
+                e.Handled = true;
+            }
+                if (e.KeyCode == Keys.Escape)
                 {
                     Undoer undoer = null;
                     foreach (var x in dictionary)
@@ -94,9 +97,9 @@ namespace TextEditor
                         }
                     }
                     undoer.RedoWords();
-                    //e.Handled = true;
+                    e.Handled = true;
                 }
-            }
+            
         }
         public void ResizeFrame()
         {
@@ -481,6 +484,7 @@ namespace TextEditor
             rtb2.TextChanged += richTextBox1_TextChangedTabs;
             rtb2.KeyDown += textBox_KeyDown;
             rtb2.VScroll += richTextBox1_VScrollTabs;
+        
             
             rtb2.TextChanged += TextBoxTextChanged;
             page.Controls.Add(rtb);
@@ -1129,6 +1133,73 @@ namespace TextEditor
         {
 
         }
+
+        private void richTextBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Modifiers == (System.Windows.Forms.Keys.Control))
+            {
+                if (e.KeyCode == Keys.Z)
+                {
+                    Undoer undoer = null;
+                    foreach (var x in dictionary)
+                    {
+                        if (x.Key.Equals(tabFiles.SelectedTab.Controls[1]))
+                        {
+                            undoer = x.Value;
+
+                        }
+                    }
+                    undoer.UndoWords();
+                    e.Handled = true;
+                }
+                if (e.KeyCode == Keys.Y)
+                {
+                    Undoer undoer = null;
+                    foreach (var x in dictionary)
+                    {
+                        if (x.Key.Equals(tabFiles.SelectedTab.Controls[1]))
+                        {
+                            undoer = x.Value;
+                        }
+                    }
+                    undoer.RedoWords();
+                    e.Handled = true;
+                }
+            }
+        }
+
+        private void richTextBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            
+                if (e.Equals(Keys.Z))
+                {
+                    Undoer undoer = null;
+                    foreach (var x in dictionary)
+                    {
+                        if (x.Key.Equals(tabFiles.SelectedTab.Controls[1]))
+                        {
+                            undoer = x.Value;
+
+                        }
+                    }
+                    undoer.UndoWords();
+                    e.Handled = true;
+                }
+                if (e.Equals(Keys.Y))
+                {
+                    Undoer undoer = null;
+                    foreach (var x in dictionary)
+                    {
+                        if (x.Key.Equals(tabFiles.SelectedTab.Controls[1]))
+                        {
+                            undoer = x.Value;
+                        }
+                    }
+                    undoer.RedoWords();
+                    e.Handled = true;
+                }
+            }
+        }
     }
 
-}
+
