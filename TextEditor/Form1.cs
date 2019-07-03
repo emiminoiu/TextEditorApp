@@ -1199,7 +1199,13 @@ namespace TextEditor
                     e.Handled = true;
                 }
             }
+
+        private void iToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var richTextBoxPanel = tabFiles.SelectedTab.Controls[0] as RichTextBox;         
+            InsertionPanel ip = new InsertionPanel(tabFiles, richTextBoxPanel);
         }
+    }
     }
 
 

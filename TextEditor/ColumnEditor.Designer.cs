@@ -191,6 +191,7 @@
             // radioBtnDec
             // 
             this.radioBtnDec.AutoSize = true;
+            this.radioBtnDec.Enabled = false;
             this.radioBtnDec.Location = new System.Drawing.Point(47, 25);
             this.radioBtnDec.Name = "radioBtnDec";
             this.radioBtnDec.Size = new System.Drawing.Size(63, 24);
@@ -198,12 +199,12 @@
             this.radioBtnDec.TabStop = true;
             this.radioBtnDec.Text = "Dec";
             this.radioBtnDec.UseVisualStyleBackColor = true;
-            this.radioBtnDec.Visible = false;
             this.radioBtnDec.CheckedChanged += new System.EventHandler(this.radioBtnDec_CheckedChanged);
             // 
             // radioBtnOct
             // 
             this.radioBtnOct.AutoSize = true;
+            this.radioBtnOct.Enabled = false;
             this.radioBtnOct.Location = new System.Drawing.Point(47, 55);
             this.radioBtnOct.Name = "radioBtnOct";
             this.radioBtnOct.Size = new System.Drawing.Size(59, 24);
@@ -211,11 +212,11 @@
             this.radioBtnOct.TabStop = true;
             this.radioBtnOct.Text = "Oct";
             this.radioBtnOct.UseVisualStyleBackColor = true;
-            this.radioBtnOct.Visible = false;
             // 
             // radioBtnHex
             // 
             this.radioBtnHex.AutoSize = true;
+            this.radioBtnHex.Enabled = false;
             this.radioBtnHex.Location = new System.Drawing.Point(227, 25);
             this.radioBtnHex.Name = "radioBtnHex";
             this.radioBtnHex.Size = new System.Drawing.Size(62, 24);
@@ -223,12 +224,12 @@
             this.radioBtnHex.TabStop = true;
             this.radioBtnHex.Text = "Hex";
             this.radioBtnHex.UseVisualStyleBackColor = true;
-            this.radioBtnHex.Visible = false;
             this.radioBtnHex.CheckedChanged += new System.EventHandler(this.radioBtnHex_CheckedChanged);
             // 
             // radioBtnBin
             // 
             this.radioBtnBin.AutoSize = true;
+            this.radioBtnBin.Enabled = false;
             this.radioBtnBin.Location = new System.Drawing.Point(227, 55);
             this.radioBtnBin.Name = "radioBtnBin";
             this.radioBtnBin.Size = new System.Drawing.Size(57, 24);
@@ -236,7 +237,6 @@
             this.radioBtnBin.TabStop = true;
             this.radioBtnBin.Text = "Bin";
             this.radioBtnBin.UseVisualStyleBackColor = true;
-            this.radioBtnBin.Visible = false;
             // 
             // groupBox1
             // 
@@ -244,13 +244,13 @@
             this.groupBox1.Controls.Add(this.radioBtnHex);
             this.groupBox1.Controls.Add(this.radioBtnOct);
             this.groupBox1.Controls.Add(this.radioBtnDec);
+            this.groupBox1.Enabled = false;
             this.groupBox1.Location = new System.Drawing.Point(177, 465);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(332, 111);
             this.groupBox1.TabIndex = 20;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Format";
-            this.groupBox1.Visible = false;
             this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
             // 
             // ColumnEditor

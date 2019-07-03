@@ -86,6 +86,12 @@
     <Compile Include="GoToForm.Designer.cs">
       <DependentUpon>GoToForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="InsertionPanel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InsertionPanel.Designer.cs">
+      <DependentUpon>InsertionPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="IUndoRedoCommand.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -123,6 +129,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GoToForm.resx">
       <DependentUpon>GoToForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InsertionPanel.resx">
+      <DependentUpon>InsertionPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
